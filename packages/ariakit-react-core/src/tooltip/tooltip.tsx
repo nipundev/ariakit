@@ -1,5 +1,6 @@
 import { contains } from "@ariakit/core/utils/dom";
 import { invariant, isFalsyBooleanCallback } from "@ariakit/core/utils/misc";
+import { createDialogComponent } from "../dialog/dialog.js";
 import { useHovercard } from "../hovercard/hovercard.js";
 import type { HovercardOptions } from "../hovercard/hovercard.js";
 import { useWrapElement } from "../utils/hooks.js";
@@ -95,16 +96,20 @@ export const useTooltip = createHook<TooltipOptions>(
  * Renders a tooltip element.
  * @see https://ariakit.org/components/tooltip
  * @example
- * ```jsx
- * const tooltip = useTooltipStore();
- * <TooltipAnchor store={tooltip}>Anchor</TooltipAnchor>
- * <Tooltip store={tooltip}>Tooltip</Tooltip>
+ * ```jsx {3}
+ * <TooltipProvider>
+ *   <TooltipAnchor>Anchor</TooltipAnchor>
+ *   <Tooltip>Tooltip</Tooltip>
+ * </TooltipProvider>
  * ```
  */
-export const Tooltip = createComponent<TooltipOptions>((props) => {
-  const htmlProps = useTooltip(props);
-  return createElement("div", htmlProps);
-});
+export const Tooltip = createDialogComponent(
+  createComponent<TooltipOptions>((props) => {
+    const htmlProps = useTooltip(props);
+    return createElement("div", htmlProps);
+  }),
+  useTooltipProviderContext,
+);
 
 if (process.env.NODE_ENV !== "production") {
   Tooltip.displayName = "Tooltip";
@@ -113,7 +118,11 @@ if (process.env.NODE_ENV !== "production") {
 export interface TooltipOptions<T extends As = "div">
   extends HovercardOptions<T> {
   /**
-   * Object returned by the `useTooltipStore` hook.
+   * Object returned by the
+   * [`useTooltipStore`](https://ariakit.org/reference/use-tooltip-store) hook.
+   * If not provided, the closest
+   * [`TooltipProvider`](https://ariakit.org/reference/tooltip-provider)
+   * component's context will be used.
    */
   store?: TooltipStore;
   /** @default true */

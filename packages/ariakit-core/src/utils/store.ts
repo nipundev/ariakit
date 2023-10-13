@@ -67,7 +67,7 @@ export function createStore<S extends State>(
 
   const setups = new Set<() => void | (() => void)>();
   const listeners = new Set<Listener<S>>();
-  const listenersBatch = new Set<Listener<S>>();
+  const batchListeners = new Set<Listener<S>>();
   const disposables = new WeakMap<Listener<S>, void | (() => void)>();
   const listenerKeys = new WeakMap<Listener<S>, Array<keyof S> | null>();
 
@@ -87,7 +87,15 @@ export function createStore<S extends State>(
           const storeState = store?.getState?.();
           if (!storeState) return;
           if (!hasOwnProperty(storeState, key)) return;
-          return sync(store, [key], (state) => setState(key, state[key]!));
+          return sync(store, [key], (state) =>
+            setState(
+              key,
+              state[key]!,
+              // @ts-expect-error - Not public API. This is just to prevent
+              // infinite loops.
+              true,
+            ),
+          );
         }),
       ),
     );
@@ -105,9 +113,8 @@ export function createStore<S extends State>(
   const sub = (
     keys: Array<keyof S> | null,
     listener: Listener<S>,
-    batch = false,
+    set = listeners,
   ) => {
-    const set = batch ? listenersBatch : listeners;
     set.add(listener);
     listenerKeys.set(listener, keys);
     return () => {
@@ -128,7 +135,7 @@ export function createStore<S extends State>(
 
   const storeBatch: StoreBatch<S> = (keys, listener) => {
     disposables.set(listener, listener(state, prevStateBatch));
-    return sub(keys, listener, true);
+    return sub(keys, listener, batchListeners);
   };
 
   const storePick: StorePick<S, ReadonlyArray<keyof S>> = (keys) =>
@@ -139,16 +146,18 @@ export function createStore<S extends State>(
 
   const getState: Store<S>["getState"] = () => state;
 
-  const setState: Store<S>["setState"] = (key, value) => {
+  const setState: Store<S>["setState"] = (key, value, fromStores = false) => {
     if (!hasOwnProperty(state, key)) return;
 
     const nextValue = applyState(value, state[key]);
 
     if (nextValue === state[key]) return;
 
-    stores.forEach((store) => {
-      store?.setState?.(key, nextValue);
-    });
+    if (!fromStores) {
+      stores.forEach((store) => {
+        store?.setState?.(key, nextValue);
+      });
+    }
 
     const prevState = state;
     state = { ...state, [key]: nextValue };
@@ -166,7 +175,9 @@ export function createStore<S extends State>(
       }
     };
 
-    listeners.forEach((listener) => run(listener, prevState));
+    listeners.forEach((listener) => {
+      run(listener, prevState);
+    });
 
     queueMicrotask(() => {
       // If setState is called again before this microtask runs, skip this
@@ -176,7 +187,7 @@ export function createStore<S extends State>(
       // Take a snapshot of the state before running batch listeners. This is
       // necessary because batch listeners can setState.
       const snapshot = state;
-      listenersBatch.forEach((listener) => {
+      batchListeners.forEach((listener) => {
         run(listener, prevStateBatch, updatedKeys);
       });
       prevStateBatch = snapshot;

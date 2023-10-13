@@ -73,7 +73,7 @@ export const Menu = React.forwardRef<HTMLDivElement, MenuProps>(function Menu(
         // instead of nesting newly opened menus (that could be inside the
         // modal) in existing portals that could've been disabled by the
         // WordPress Modal, we always append them to the body element.
-        <Ariakit.PortalContext.Provider value={document.body}>
+        <Ariakit.PortalContext.Provider value={globalThis.document?.body}>
           <Ariakit.Menu
             portal
             // Can't display the menu as a modal when it's nested within a
@@ -119,9 +119,9 @@ export function createMenuSlot(name: string, bubblesVirtually = false) {
     if (!bubblesVirtually) return <SlotFill.Fill {...props} />;
     return (
       <SlotFill.Fill>
-        {(menu: Ariakit.MenuStore) => (
+        {(menu) => (
           // Re-create the menu context within the fill tree
-          <MenuContext.Provider value={menu}>
+          <MenuContext.Provider value={menu as Ariakit.MenuStore}>
             {props.children}
           </MenuContext.Provider>
         )}

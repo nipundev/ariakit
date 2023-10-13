@@ -7,6 +7,36 @@ export interface UpdateItem {
 
 const updates: UpdateItem[] = [
   {
+    title: "Improved docs: Nested Dialog",
+    type: "page",
+    href: "/examples/dialog-nested",
+    dateTime: "2023-10-09T18:51Z",
+  },
+  {
+    title: "Improved example: Dialog with Menu",
+    type: "page",
+    href: "/examples/dialog-menu",
+    dateTime: "2023-10-08T22:15Z",
+  },
+  {
+    title: "Improved example: Toolbar with Select",
+    type: "page",
+    href: "/examples/toolbar-select",
+    dateTime: "2023-10-03T11:34Z",
+  },
+  {
+    title: "Improved example: Tab with Next.js App Router",
+    type: "page",
+    href: "/examples/tab-next-router",
+    dateTime: "2023-10-02T17:49Z",
+  },
+  {
+    title: "Improved example: Tab with React Router",
+    type: "page",
+    href: "/examples/tab-react-router",
+    dateTime: "2023-10-02T17:48Z",
+  },
+  {
     title: "New example: Warning on Dialog hide",
     type: "page",
     href: "/examples/dialog-hide-warning",

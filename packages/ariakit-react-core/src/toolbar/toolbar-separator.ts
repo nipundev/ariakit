@@ -32,9 +32,8 @@ export const useToolbarSeparator = createHook<ToolbarSeparatorOptions>(
  * Renders a separator for toolbar items.
  * @see https://ariakit.org/components/toolbar
  * @example
- * ```jsx
- * const toolbar = useToolbarStore();
- * <Toolbar store={toolbar}>
+ * ```jsx {3}
+ * <Toolbar>
  *   <ToolbarItem>Item 1</ToolbarItem>
  *   <ToolbarSeparator />
  *   <ToolbarItem>Item 2</ToolbarItem>
@@ -55,8 +54,11 @@ if (process.env.NODE_ENV !== "production") {
 export interface ToolbarSeparatorOptions<T extends As = "hr">
   extends CompositeSeparatorOptions<T> {
   /**
-   * Object returned by the `useToolbarStore` hook. If not provided, the parent
-   * `Toolbar` component's context will be used.
+   * Object returned by the
+   * [`useToolbarStore`](https://ariakit.org/reference/use-toolbar-store) hook.
+   * If not provided, the closest
+   * [`Toolbar`](https://ariakit.org/reference/toolbar) component's context will
+   * be used.
    */
   store?: ToolbarStore;
 }
