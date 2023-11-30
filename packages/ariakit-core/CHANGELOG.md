@@ -1,5 +1,13 @@
 # @ariakit/core
 
+## 0.3.6
+
+- Fixed `setSelectionRange` error when used with [unsupported](https://html.spec.whatwg.org/multipage/input.html#concept-input-apply) input types.
+
+## 0.3.5
+
+- Added new `menubar` module.
+
 ## 0.3.4
 
 ### Patch Changes

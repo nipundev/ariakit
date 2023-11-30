@@ -241,6 +241,7 @@ export const usePopover = createHook<PopoverOptions>(
 
     const arrowElement = store.useState("arrowElement");
     const anchorElement = store.useState("anchorElement");
+    const disclosureElement = store.useState("disclosureElement");
     const popoverElement = store.useState("popoverElement");
     const contentElement = store.useState("contentElement");
     const placement = store.useState("placement");
@@ -434,8 +435,9 @@ export const usePopover = createHook<PopoverOptions>(
     props = useDialog({
       store,
       modal,
-      preserveTabOrder,
       portal,
+      preserveTabOrder,
+      preserveTabOrderAnchor: disclosureElement || anchorElement,
       autoFocusOnShow: positioned && autoFocusOnShow,
       ...props,
       portalRef,
@@ -480,6 +482,9 @@ export interface PopoverOptions<T extends As = "div"> extends DialogOptions<T> {
   /**
    * Props that will be passed to the popover wrapper element. This element will
    * be used to position the popover.
+   *
+   * Live examples:
+   * - [Navigation Menubar](https://ariakit.org/examples/menubar-navigation)
    */
   wrapperProps?: HTMLAttributes<HTMLDivElement>;
   /**
@@ -489,12 +494,25 @@ export interface PopoverOptions<T extends As = "div"> extends DialogOptions<T> {
   fixed?: boolean;
   /**
    * The distance between the popover and the anchor element.
+   *
+   * Live examples:
+   * - [Combobox filtering](https://ariakit.org/examples/combobox-filtering)
+   * - [Form with Select](https://ariakit.org/examples/form-select)
+   * - [Hovercard with keyboard support](https://ariakit.org/examples/hovercard-disclosure)
+   * - [MenuItemRadio](https://ariakit.org/examples/menu-item-radio)
+   * - [Submenu](https://ariakit.org/examples/menu-nested)
+   * - [Toolbar with Select](https://ariakit.org/examples/toolbar-select)
    * @default 0
    */
   gutter?: number;
   /**
    * The skidding of the popover along the anchor element. Can be set to
    * negative values to make the popover shift to the opposite side.
+   *
+   * Live examples:
+   * - [Navigation Menubar](https://ariakit.org/examples/menubar-navigation)
+   * - [Submenu](https://ariakit.org/examples/menu-nested)
+   * - [Menubar](https://ariakit.org/components/menubar)
    * @default 0
    */
   shift?: number;
@@ -504,6 +522,10 @@ export interface PopoverOptions<T extends As = "div"> extends DialogOptions<T> {
    *   side when it overflows.
    * - If a `string`, indicates the preferred fallback placements when it
    *   overflows. The placements must be spaced-delimited, e.g. "top left".
+   *
+   * Live examples:
+   * - [Sliding Menu](https://ariakit.org/examples/menu-slide)
+   * - [Menubar](https://ariakit.org/components/menubar)
    * @default true
    */
   flip?: boolean | string;
@@ -514,6 +536,9 @@ export interface PopoverOptions<T extends As = "div"> extends DialogOptions<T> {
   slide?: boolean;
   /**
    * Whether the popover can overlap the anchor element when it overflows.
+   *
+   * Live examples:
+   * - [Menubar](https://ariakit.org/components/menubar)
    * @default false
    */
   overlap?: boolean;
@@ -531,6 +556,11 @@ export interface PopoverOptions<T extends As = "div"> extends DialogOptions<T> {
    * [`--popover-available-width`](https://ariakit.org/guide/styling#--popover-available-width)
    * and
    * [`--popover-available-height`](https://ariakit.org/guide/styling#--popover-available-height).
+   *
+   * Live examples:
+   * - [Textarea with inline
+   *   Combobox](https://ariakit.org/examples/combobox-textarea)
+   * - [Menubar](https://ariakit.org/components/menubar)
    * @default false
    */
   fitViewport?: boolean;

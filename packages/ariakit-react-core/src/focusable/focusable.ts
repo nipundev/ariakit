@@ -526,9 +526,12 @@ export interface FocusableOptions<T extends As = "div"> extends Options<T> {
    * programmatic equivalent of the `data-focus-visible` attribute.
    *
    * Live examples:
+   * - [Navigation Menubar](https://ariakit.org/examples/menubar-navigation)
    * - [Custom Checkbox](https://ariakit.org/examples/checkbox-custom)
    */
-  onFocusVisible?: BivariantCallback<(event: SyntheticEvent) => void>;
+  onFocusVisible?: BivariantCallback<
+    (event: SyntheticEvent<HTMLElement>) => void
+  >;
 }
 
 export type FocusableProps<T extends As = "div"> = Props<FocusableOptions<T>>;

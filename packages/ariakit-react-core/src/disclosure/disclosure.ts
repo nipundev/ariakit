@@ -50,30 +50,23 @@ export const useDisclosure = createHook<DisclosureOptions>(
     // content is open.
     useEffect(() => {
       let isCurrentDisclosure = disclosureElement === ref.current;
-      if (!disclosureElement || !disclosureElement.isConnected) {
+      if (!disclosureElement?.isConnected) {
         store?.setDisclosureElement(ref.current);
         isCurrentDisclosure = true;
       }
       setExpanded(open && isCurrentDisclosure);
-    }, [disclosureElement, open]);
-
-    const onMouseDownProp = props.onMouseDown;
-
-    const onMouseDown = useEvent((event: MouseEvent<HTMLButtonElement>) => {
-      store?.setDisclosureElement(event.currentTarget);
-      onMouseDownProp?.(event);
-    });
+    }, [disclosureElement, store, open]);
 
     const onClickProp = props.onClick;
     const toggleOnClickProp = useBooleanEvent(toggleOnClick);
     const [isDuplicate, metadataProps] = useMetadataProps(props, symbol, true);
 
     const onClick = useEvent((event: MouseEvent<HTMLButtonElement>) => {
-      store?.setDisclosureElement(event.currentTarget);
       onClickProp?.(event);
       if (event.defaultPrevented) return;
       if (isDuplicate) return;
       if (!toggleOnClickProp(event)) return;
+      store?.setDisclosureElement(event.currentTarget);
       store?.toggle();
     });
 
@@ -85,7 +78,6 @@ export const useDisclosure = createHook<DisclosureOptions>(
       ...metadataProps,
       ...props,
       ref: useMergeRefs(ref, props.ref),
-      onMouseDown,
       onClick,
     };
 
@@ -131,6 +123,9 @@ export interface DisclosureOptions<T extends As = "button">
    * [`toggle`](https://ariakit.org/reference/use-disclosure-store#toggle) will
    * be called on click. This is useful if you want to handle the toggle logic
    * yourself.
+   *
+   * Live examples:
+   * - [Navigation Menubar](https://ariakit.org/examples/menubar-navigation)
    * @default true
    */
   toggleOnClick?: BooleanOrCallback<MouseEvent<HTMLElement>>;

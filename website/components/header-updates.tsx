@@ -21,9 +21,14 @@ import { UpdateLink } from "./update-link.jsx";
 
 export interface HeaderUpdatesProps extends ComponentPropsWithoutRef<"button"> {
   updates: UpdateItem[];
+  newPages: string[];
 }
 
-export function HeaderUpdates({ updates, ...props }: HeaderUpdatesProps) {
+export function HeaderUpdates({
+  updates,
+  newPages,
+  ...props
+}: HeaderUpdatesProps) {
   const id = useId();
   const isLarge = useMedia("(min-width: 640px)", true);
   const { seen, previousSeen, seeNow } = useUpdates({ updates });
@@ -57,7 +62,7 @@ export function HeaderUpdates({ updates, ...props }: HeaderUpdatesProps) {
       <TooltipButton
         {...props}
         title="Updates"
-        className={twJoin("h-10 w-10 p-0", props.className)}
+        className={twJoin("h-10 w-10 flex-none p-0", props.className)}
         render={
           <Ariakit.PopoverDisclosure
             store={popover}
@@ -165,6 +170,9 @@ export function HeaderUpdates({ updates, ...props }: HeaderUpdatesProps) {
                         layer="popup"
                         unread
                         connected={index !== 0}
+                        plus={newPages.some((page) =>
+                          item.href.startsWith(page),
+                        )}
                         {...item}
                       />
                     </li>
@@ -189,6 +197,9 @@ export function HeaderUpdates({ updates, ...props }: HeaderUpdatesProps) {
                         dateStyle="fromNow"
                         layer="popup"
                         connected={index !== 0}
+                        plus={newPages.some((page) =>
+                          item.href.startsWith(page),
+                        )}
                         {...item}
                       />
                     </li>

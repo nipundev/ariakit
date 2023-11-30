@@ -235,7 +235,9 @@ export interface DisclosureContentOptions<T extends As = "div">
    * the DOM when it's hidden.
    *
    * Live examples:
-   * - [Combobox with links](https://ariakit.org/examples/combobox-links)
+   * - [Navigation Menubar](https://ariakit.org/examples/menubar-navigation)
+   * - [Combobox with integrated
+   *   filter](https://ariakit.org/examples/combobox-filtering-integrated)
    * - [Textarea with inline
    *   Combobox](https://ariakit.org/examples/combobox-textarea)
    * - [Standalone Popover](https://ariakit.org/examples/popover-standalone)
